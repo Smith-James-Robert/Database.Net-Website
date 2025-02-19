@@ -1,0 +1,195 @@
+﻿@model JS2247A5.Models.ActorWithShowInfoViewModel
+@{
+    var userAccount = new JS2247A5.Controllers.RequestUser
+(User as System.Security.Claims.ClaimsPrincipal);
+    int apple=0;
+}
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<h2>@Model.Name</h2>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.AlternativeName)
+        </dt>
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AlternativeName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BirthDate)
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Height)
+        </dt>
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Height)
+        </dd>
+
+
+
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ImageUrl)
+        </dt>
+
+        <dd class="col-sm-10">
+            <img src=@Model.ImageUrl max-width="150" height="150">
+        </dd>
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Executive)
+        </dt>
+
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Executive)
+        </dd>
+
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Shows)
+            <br />
+            <span class="badge rounded-pill bg-secondary">
+                @Model.Shows.Count() Show(s)
+            </span>
+        </dt>
+
+        <dd class="col-sm-10">
+            @foreach (var show in Model.Shows)
+            {
+                <span>
+                    <br />
+                    @Html.DisplayFor(s => show.Name)
+                </span>
+            }
+        </dd>
+        @if (!string.IsNullOrWhiteSpace(Model.Biography))
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Biography)
+            </dt>
+
+            <dd>
+                <div class="card">
+                    <div class="panel panel-default panel-body">
+                        @Html.Raw(Model.Biography)
+                    </div>
+                </div>
+            </dd>
+        }
+
+        @if (Model.VideoClips.FirstOrDefault() != null)
+        {
+            <dt class="col-sm-2">
+                @Html.LabelFor(model => model.VideoClips, htmlAttributes: new { @class = "control-label col-md-2" })
+            </dt>
+            foreach (var video in Model.VideoClips)
+            {
+
+                <dd class="col-sm-10">
+                    <video controls src=@Url.Action("MediaItemDownload", new { id = video.Id }) width="480"></video>
+                    <br />
+                    <small>@video.Caption</small>
+                </dd>
+                <dt class="col-sm-2"></dt>
+            }
+            <dd class="col-sm-10">
+
+            </dd>
+        }
+        @if (Model.Photos.FirstOrDefault() != null)
+        {
+            <dt class="col-sm-2">
+                @Html.LabelFor(model => model.Photos, htmlAttributes: new { @class = "control-label col-md-2" })
+            </dt>
+
+            foreach (var photo in Model.Photos)
+            {
+
+                <dd class="col-sm-10">
+                    <img controls src=@Url.Action("MediaItemDownload", new { id = photo.Id }) height="200"></img>
+                    <br />
+                    <small>@photo.Caption</small>
+                </dd>
+                <dt class="col-sm-2"></dt>
+            }
+            <dd class="col-sm-10">
+
+            </dd>
+        }
+
+        @if (Model.AudioClips.FirstOrDefault() != null)
+        {
+            <dt class="col-sm-2">
+                @Html.LabelFor(model => model.AudioClips, htmlAttributes: new { @class = "control-label col-md-2" })
+            </dt>
+
+            foreach (var audio in Model.AudioClips)
+            {
+
+                <dd class="col-sm-10">
+                    <audio controls src=@Url.Action("MediaItemDownload", new { id = audio.Id }) width="480"></audio>
+                    <br />
+                    <small>@audio.Caption</small>
+                </dd>
+                <dt class="col-sm-2"></dt>
+            }
+            <dd class="col-sm-10">
+
+            </dd>
+        }
+        @if (Model.Documents.FirstOrDefault() != null)
+        {
+            <dt class="col-sm-2">
+                @Html.LabelFor(model => model.Documents, htmlAttributes: new { @class = "control-label col-md-2" })
+            </dt>
+
+            foreach (var document in Model.Documents)
+            { 
+                <dd class="col-sm-10">
+                    <a href=@Url.Action("MediaItemDownload", new { id = document.Id })>
+                        <img src="~/Images/icon-pdf.png" />
+                        <br />
+                         <small>
+                             @document.Caption
+                        </small>
+                    </a>
+                </dd>
+                <dt class="col-sm-2"></dt>
+            }
+            <dd class="col-sm-10">
+
+            </dd>
+        }
+    </dl>
+</div>
+<p>
+    @if (userAccount.HasRoleClaim("Executive"))
+     {
+        @Html.ActionLink("Add Media Item", "CreateMediaItem",new {id =Model.Id})
+    }
+    | 
+    @if (userAccount.HasRoleClaim("Coordinator"))
+    {
+        @Html.ActionLink("Add New Show", "Create","Show", new { id = Model.Id },null)
+    }
+
+    | @Html.ActionLink("Back to List", "Index")
+</p>

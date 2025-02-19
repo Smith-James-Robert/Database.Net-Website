@@ -1,0 +1,103 @@
+﻿@model JS2247A5.Models.ShowAddFormViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Add Show for @Model.ActorName</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+        <div class="row mb-3">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label col-sm-2" })
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            @Html.LabelFor(model => model.ReleaseDate, htmlAttributes: new { @class = "col-form-label col-sm-2" })
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.ReleaseDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            @Html.LabelFor(model => model.ImageUrl, htmlAttributes: new { @class = "col-form-label col-sm-2" })
+            <div class="col-sm-10">
+                @Html.EditorFor(model => model.ImageUrl, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ImageUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="row mb-3">
+            @Html.LabelFor(model => model.GenreList, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Genre", Model.GenreList, htmlAttributes: new
+                {
+                    @class = "form-control"
+                })
+                @Html.ValidationMessageFor(model => model.GenreList, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            @Html.LabelFor(model => model.ActorList, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10   card">
+                @*
+
+                    Well's don't appear to exist anymore*@
+                @*
+                    @foreach (var track in Model.ActorList)
+                    {
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value=@track.Value id="ActorId"
+                                   @if (Model.ActorId.Contains(track.Value.AsInt())) { <text> checked </text> } />
+                            <label class="form-check-label" for="@track.Value">
+                                @track.Text
+                            </label>
+
+                        </div>
+
+                    }
+                *@
+                @foreach (var actor in Model.ActorList)
+                {
+                    <input type="checkbox" value="@actor.Value" name="ActorId" id="@actor.Value"
+                           @if (Model.ActorId.Contains(actor.Value.AsInt())) { <text> checked </text> } />
+                    <label for="@actor.Value">@actor.Text</label>
+                }
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Premise, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Premise, new { htmlAttributes = new { @class = "form-control", @rows = 8 } })
+                    @Html.ValidationMessageFor(model => model.Premise, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="//cdn.ckeditor.com/4.6.2/standard/ckeditor.js"></script>
+    <script>CKEDITOR.replace('Premise', { startupFocus: true });</script>
+}
+}
